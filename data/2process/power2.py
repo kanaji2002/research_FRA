@@ -23,9 +23,33 @@ for _ in range(3):
     # Split the data
     train_data, test_data = train_test_split(data, test_size=0.1, random_state=42)
 
-    # Setup PyCaret for regression
-    exp1 = setup(train_data, target='Power', ignore_features=['Model1','Model2' ,'Tem','model1+2_P','CommonP', 'model1_P_2pir', 'model2_P_2pair', 'model_py', 'P_Usage', 'model1_FLOPS'])
+    # # 最適そうな変数
+    explanatory_vars = ['MUsage1', 'MUsage2', 'model1_P','model2_P','GPU_Uti', 'M_Uti', 'model1_FLP', 'model2_FLP']
+    
+    
+    # # 先生から言われた変数
+    # explanatory_vars = ['MUsage1', 'MUsage2', 'model1_FLP', 'model2_FLP']
+
+    
+    # Setup the experiment with selected explanatory variables
+    exp1 = setup(train_data[explanatory_vars + ['Power']], target='Power')
+    
+    
     # exp1 = setup(train_data, target='Power', ignore_features=['Model1','Model2','MUsage1', 'MUsage2', 'Tem', 'GPU_Uti', 'M_Uti', 'model1+2_P','CommonP', 'model1_P_2pir', 'model2_P_2pair', 'model_py', 'P_Usage', 'model1_FLOPS'])
+#model1,model2,MUsage1,MUsage2,Power,Tem,GPU_Uti,M_Uti,CommonP,model1_P,model2_P,model1+2_P,model1_FLP,model2_FLP,model1_P_2pir,model2_P_2pair,model_py,P_Usage,model1_FLOPS
+
+## 存在する変数は，
+
+# 使用する変数
+# - MUsage1  メモリの使用量W
+# - MUsage2
+# - Power1
+# - Power2
+# - GPU_Uti　GPU使用率
+# - M_Uti 　メモリ使用率
+# - model1_FLP　　モデルごとのFLOPS
+# - model2_FLP
+
 
     # print('exp1:',exp1)
     
@@ -55,15 +79,6 @@ for _ in range(3):
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-
     # Create stacked models
     for i, models_list in enumerate([models_list1, models_list2, models_list3], 1):
         stacked_model = stack_models(estimator_list=models_list, meta_model=LinearRegression())

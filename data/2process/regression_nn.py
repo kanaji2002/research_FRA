@@ -16,8 +16,16 @@ df = pd.read_csv('power.csv')
 print(df.head())
 
 
+
+
+
+# Use only the specified variables
 y = df['Power']
-X = df.drop(['Power', 'model1', 'model2', 'Tem', 'model1+2_P', 'CommonP', 'model1_P_2pir', 'model2_P_2pair', 'model_py', 'P_Usage', 'model1_FLOPS'], axis=1)
+# X = df[['MUsage1', 'MUsage2', 'model1_P','model2_P','GPU_Uti', 'M_Uti', 'model1_FLP', 'model2_FLP']]
+X = df[['MUsage1', 'MUsage2', 'model1_FLP', 'model2_FLP']]
+
+
+
 print(X.shape)
 X = torch.tensor(X.values, dtype=torch.float32)
 y = torch.tensor(y.values, dtype=torch.float32)
@@ -61,7 +69,7 @@ y = torch.tensor(y.values, dtype=torch.float32)
 
 # most good model with epoch 2000
 model = nn.Sequential(
-    nn.Linear(8, 64),
+    nn.Linear(4, 64),
     nn.ReLU(),
     nn.Linear(64, 32),
     nn.ReLU(),
